@@ -4,7 +4,7 @@ class Character {
   int attack;
   int defense;
 
-  Character(this.name, this.health, this.attack, this.defense);
+  Character({required this.name, required this.health, required this.attack, required this.defense});
 
   void attackMonster(Monster monster) {}
   void defend() {}
