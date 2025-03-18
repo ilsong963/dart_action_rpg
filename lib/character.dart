@@ -1,3 +1,5 @@
+import 'package:dart_action_rpg/monster.dart';
+
 class Character {
   String name;
   int health;
@@ -6,7 +8,10 @@ class Character {
 
   Character({required this.name, required this.health, required this.attack, required this.defense});
 
-  void attackMonster(Monster monster) {}
+  void attackMonster(Monster monster) {
+    monster.health -= attack;
+  }
+
   void defend() {}
   void showStatus() {}
 }
