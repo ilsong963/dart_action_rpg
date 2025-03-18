@@ -6,11 +6,6 @@ class Game {
   late Character character;
   List<Monster> monsterList = [];
   int killCount = 0;
-
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   void startGame() {}
 
   void battle() {}
@@ -41,6 +36,7 @@ class Game {
       exit(1);
     }
   }
+
   void loadMonsterStats() {
     try {
       final file = File('monster.txt');
@@ -59,5 +55,4 @@ class Game {
       exit(1);
     }
   }
-
 }
