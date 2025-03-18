@@ -1,3 +1,5 @@
+import 'package:dart_action_rpg/monster.dart';
+
 class Character {
   String name;
   int health;
