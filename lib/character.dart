@@ -13,5 +13,7 @@ class Character {
   }
 
   void defend() {}
-  void showStatus() {}
+  void showStatus() {
+    print('$name - 체력: $health, 공격력: $attack, 방어력: $defense');
+  }
 }
