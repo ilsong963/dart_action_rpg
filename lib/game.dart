@@ -8,7 +8,23 @@ class Game {
   late Character character;
   List<Monster> monsterList = [];
   int killCount = 0;
-  void startGame() {}
+
+  void startGame() {
+    print("게임을 시작합니다!");
+    _initData();
+    character.showStatus();
+
+    print("새로운 몬스터가 나타났습니다!");
+    Monster monster = getRandomMonster();
+    monster.showStatus();
+
+    battle();
+  }
+
+  void _initData() {
+    loadCharacterStats();
+    loadMonsterStats();
+  }
 
   void battle() {}
 
