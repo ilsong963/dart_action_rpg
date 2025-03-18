@@ -18,7 +18,15 @@ void main() {
       expect(game.monsterList[0].randAttackMax, 20);
     });
     test("getRandomMonster 테스트", () {
+      game.monsterList = [
+        Monster(name: 'test1', health: 10, randAttackMax: 10),
+        Monster(name: 'test2', health: 20, randAttackMax: 20),
+        Monster(name: 'test3', health: 30, randAttackMax: 30),
+      ];
+
+      final randomMonster = game.getRandomMonster();
       expect(game.getRandomMonster(), isA<Monster>());
+      expect(game.monsterList.contains(randomMonster), isTrue);
     });
   });
 }
