@@ -70,4 +70,21 @@ class Game {
       exit(1);
     }
   }
+
+  void gameOver() {
+    print('결과를 저장하시겠습니까? (y/n)');
+    String? answer;
+
+    while (answer == null || answer == 'y' || answer == 'n') {
+      try {
+        answer = stdin.readLineSync();
+      } catch (e) {
+        print("다시 입력해주세요");
+      }
+    }
+
+    if (answer == 'y') {
+      //save;
+    }
+  }
 }
