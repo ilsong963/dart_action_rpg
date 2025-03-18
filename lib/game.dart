@@ -14,13 +14,22 @@ class Game {
 
   String getCharacterName() {
     print("캐릭터의 이름을 입력하세요:");
+    String? name;
+    RegExp regex = RegExp(r'^[a-zA-Z가-힣]+$');
+    while (name == null || regex.hasMatch(name)) {
+      try {
+        name = stdin.readLineSync();
+      } catch (e) {
+        print("특수문자나 숫자가 포함되어 있습니다.");
+      }
+    }
 
-    return stdin.readLineSync()!; // !를 통해 null이 아님을 보장
+    return name;
   }
 
   void loadCharacterStats() {
     try {
-      final file = File('characters.txt');
+      final file = File('./lib/characters.txt');
       final contents = file.readAsStringSync();
       final stats = contents.split(',');
       if (stats.length != 3) throw FormatException('Invalid character data');
@@ -39,7 +48,7 @@ class Game {
 
   void loadMonsterStats() {
     try {
-      final file = File('monster.txt');
+      final file = File('./lib/monsters.txt');
       final lines = file.readAsLinesSync();
       for (var line in lines) {
         final stats = line.split(',');
