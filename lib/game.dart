@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'character.dart';
 import 'monster.dart';
 import 'dart:io';
@@ -10,12 +12,16 @@ class Game {
 
   void battle() {}
 
-  void getRandomMonster() {}
+  Monster getRandomMonster() {
+    int rand = Random().nextInt(monsterList.length);
+    return monsterList[rand];
+  }
 
   String getCharacterName() {
     print("캐릭터의 이름을 입력하세요:");
     String? name;
     RegExp regex = RegExp(r'^[a-zA-Z가-힣]+$');
+
     while (name == null || regex.hasMatch(name)) {
       try {
         name = stdin.readLineSync();
