@@ -71,7 +71,7 @@ class Game {
     }
   }
 
-  void gameOver() {
+  void gameOver(bool isWin) {
     print('결과를 저장하시겠습니까? (y/n)');
     String? answer;
 
@@ -84,7 +84,18 @@ class Game {
     }
 
     if (answer == 'y') {
-      //save;
+      saveResult(isWin);
+    }
+  }
+
+  void saveResult(bool isWin) {
+    final file = File('result.txt');
+
+    try {
+      file.writeAsStringSync("${character.name},${character.health}, ${isWin ? "승리" : "패배"}"); // 파일이 없으면 자동 생성
+      print('저장되었습니다.');
+    } catch (e) {
+      print('파일 저장 중 오류가 발생했습니다: $e');
     }
   }
 }
