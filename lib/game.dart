@@ -14,14 +14,35 @@ class Game {
     _initData();
     character.showStatus();
 
-    while (killCount < monsterList.length || monsterList.isNotEmpty) {
+    while (monsterList.isNotEmpty) {
       print("새로운 몬스터가 나타났습니다!");
       Monster monster = getRandomMonster();
       monster.showStatus();
 
       battle(monster);
-      killCount++;
+
+      if (character.health <= 0) {
+        print("게임 오버! 패배했습니다.");
+        askSaveResult(false);
+        break;
+      }
+
+      if (monsterList.isEmpty) {
+        print("축하합니다! 모든 몬스터를 물리쳤습니다.");
+        askSaveResult(true);
+      } else if (_askLoop(
+            question: "다음 몬스터와 싸우시겠습니까? (y/n)",
+            error: "다시 입력해주세요",
+            answer1: 'y',
+            answer2: 'n',
+          ) ==
+          'n') {
+        askSaveResult(false);
+        break;
+      }
     }
+
+    print("게임을 종료합니다.");
   }
 
   void _initData() {
@@ -30,57 +51,50 @@ class Game {
   }
 
   void battle(Monster monster) {
-    String answer;
-    while (true) {
-      // 유저 턴
-      print('${character.name}의 턴');
-      answer = askLoop(
-        tryAsk: "행동을 선택하세요 (1: 공격, 2:방어): ",
-        catchAsk: "다시 입력해주세요",
+    while (character.health > 0 && monster.health > 0) {
+      print("몬스터 체력: ${monster.health}, 내 체력: ${character.health}");
+
+      // 플레이어 턴
+      print("${character.name}의 턴");
+      String action = _askLoop(
+        question: "행동을 선택하세요 (1: 공격, 2:방어): ",
+        error: "다시 입력해주세요",
         answer1: '1',
         answer2: '2',
       );
-
-      if (answer == "1") {
-        character.attackMonster(monster);
-      } else {
-        character.defend();
-      }
-
-      // 몬스터 턴
-      print('${monster.name}의 턴');
-      monster.attackCharacter(character);
-      answer = askLoop(
-        tryAsk: "다음 몬스터와 싸우시겠습니까? (y/n)",
-        catchAsk: "다시 입력해주세요",
-        answer1: 'y',
-        answer2: 'n',
-      );
+      action == '1' ? character.attackMonster(monster) : character.defend();
 
       if (monster.health <= 0) {
         print("${monster.name}을(를) 물리쳤습니다!");
+        killCount++;
         break;
       }
+
+      // 몬스터 턴
+      print("${monster.name}의 턴");
+      monster.attackCharacter(character);
     }
   }
 
-  dynamic askLoop({
-    required String tryAsk,
-    required String catchAsk,
+  dynamic _askLoop({
+    required String question,
+    required String error,
     required dynamic answer1,
     required dynamic answer2,
   }) {
     String? answer;
 
-    while (answer == null || answer != answer1 || answer != answer2) {
-      try {
-        print(tryAsk);
-        answer = stdin.readLineSync();
-      } catch (e) {
-        print(catchAsk);
+    while (true) {
+      print(question);
+      answer = stdin.readLineSync();
+
+      if (answer != null && (answer == answer1 || answer == answer2)) {
+        return answer;
+      }
+      if (answer != null) {
+        print(error);
       }
     }
-    return answer;
   }
 
   Monster getRandomMonster() {
@@ -166,6 +180,18 @@ class Game {
 
     if (answer == 'y') {
       saveResult(isWin);
+    }
+  }
+
+  void askSaveResult(bool result) {
+    String answer = _askLoop(
+      question: "결과를 저장하시겠습니까? (y/n)",
+      error: "다시 입력해주세요",
+      answer1: "y",
+      answer2: "n",
+    );
+    if (answer == "y") {
+      saveResult(result);
     }
   }
 
