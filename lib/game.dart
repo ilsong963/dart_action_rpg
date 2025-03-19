@@ -12,8 +12,9 @@ class Game {
   int killCount = 0;
 
   void startGame() {
-    print("게임을 시작합니다!");
     _initData();
+    print("게임을 시작합니다!");
+
     character.showStatus();
 
     while (true) {
@@ -74,6 +75,9 @@ class Game {
       // 몬스터 턴
       print("${monster.name}의 턴");
       monster.attackCharacter(character);
+
+      character.showStatus();
+      monster.showStatus();
     }
   }
 
