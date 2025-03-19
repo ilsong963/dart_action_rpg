@@ -15,7 +15,7 @@ class Character {
   });
 
   void attackMonster(Monster monster) {
-    print("$name(이)가 ${monster.name}에게 $attack의 데미지를 입혔습니다");
+    print("$name(이)가 ${monster.name}에게 $attack의 데미지를 입혔습니다.\n");
     monster.health -= attack;
   }
 
@@ -24,6 +24,6 @@ class Character {
   }
 
   void showStatus() {
-    print('$name - 체력: $health, 공격력: $attack, 방어력: $defense');
+    print('$name - 체력: $health, 공격력: $attack, 방어력: $defense\n');
   }
 }

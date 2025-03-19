@@ -55,8 +55,6 @@ class Game {
 
   void _battle(Monster monster) {
     while (character.health > 0 && monster.health > 0) {
-      print("몬스터 체력: ${monster.health}, 내 체력: ${character.health}");
-
       // 플레이어 턴
       print("${character.name}의 턴");
       String action = askLoop(

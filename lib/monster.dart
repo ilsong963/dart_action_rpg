@@ -20,7 +20,7 @@ class Monster {
     int totalDamage = 0;
 
     if (character.isDefend) {
-      print("${character.name}(이)가 $name의 공격을 막았습니다.");
+      print("${character.name}(이)가 $name의 공격을 막았습니다.\n");
       character.isDefend = false;
       return;
     }
@@ -32,10 +32,10 @@ class Monster {
     }
     character.health -= totalDamage;
 
-    print("$name(이)가 ${character.name}에게 $totalDamage의 데미지를 입혔습니다");
+    print("$name(이)가 ${character.name}에게 $totalDamage의 데미지를 입혔습니다.\n");
   }
 
   void showStatus() {
-    print("$name - 체력 : $health , 공격력 : $randAttackMax ");
+    print("$name - 체력 : $health , 공격력 : $randAttackMax\n");
   }
 }
