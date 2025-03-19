@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:dart_action_rpg/helper.dart';
+
 import 'character.dart';
 import 'monster.dart';
 import 'dart:io';
@@ -14,30 +16,31 @@ class Game {
     _initData();
     character.showStatus();
 
-    while (monsterList.isNotEmpty) {
+    while (true) {
       print("새로운 몬스터가 나타났습니다!");
-      Monster monster = getRandomMonster();
+      Monster monster = _getRandomMonster();
       monster.showStatus();
 
-      battle(monster);
+      _battle(monster);
 
       if (character.health <= 0) {
         print("게임 오버! 패배했습니다.");
-        askSaveResult(false);
+        _askSaveResult(false);
         break;
       }
 
       if (monsterList.isEmpty) {
         print("축하합니다! 모든 몬스터를 물리쳤습니다.");
-        askSaveResult(true);
-      } else if (_askLoop(
+        _askSaveResult(true);
+        break;
+      } else if (askLoop(
             question: "다음 몬스터와 싸우시겠습니까? (y/n)",
             error: "다시 입력해주세요",
             answer1: 'y',
             answer2: 'n',
           ) ==
           'n') {
-        askSaveResult(false);
+        _askSaveResult(false);
         break;
       }
     }
@@ -46,17 +49,17 @@ class Game {
   }
 
   void _initData() {
-    loadCharacterStats();
-    loadMonsterStats();
+    _loadCharacterStats();
+    _loadMonsterStats();
   }
 
-  void battle(Monster monster) {
+  void _battle(Monster monster) {
     while (character.health > 0 && monster.health > 0) {
       print("몬스터 체력: ${monster.health}, 내 체력: ${character.health}");
 
       // 플레이어 턴
       print("${character.name}의 턴");
-      String action = _askLoop(
+      String action = askLoop(
         question: "행동을 선택하세요 (1: 공격, 2:방어): ",
         error: "다시 입력해주세요",
         answer1: '1',
@@ -76,35 +79,14 @@ class Game {
     }
   }
 
-  dynamic _askLoop({
-    required String question,
-    required String error,
-    required dynamic answer1,
-    required dynamic answer2,
-  }) {
-    String? answer;
-
-    while (true) {
-      print(question);
-      answer = stdin.readLineSync();
-
-      if (answer != null && (answer == answer1 || answer == answer2)) {
-        return answer;
-      }
-      if (answer != null) {
-        print(error);
-      }
-    }
-  }
-
-  Monster getRandomMonster() {
+  Monster _getRandomMonster() {
     int rand = Random().nextInt(monsterList.length);
     Monster monster = monsterList[rand];
     monsterList.removeAt(rand);
     return monster;
   }
 
-  String getCharacterName() {
+  String _getCharacterName() {
     print("캐릭터의 이름을 입력하세요:");
     String? name;
     RegExp regex = RegExp(r'^[a-zA-Z가-힣]+$');
@@ -121,7 +103,7 @@ class Game {
     }
   }
 
-  void loadCharacterStats() {
+  void _loadCharacterStats() {
     try {
       final file = File('./lib/characters.txt');
       final contents = file.readAsStringSync();
@@ -132,7 +114,7 @@ class Game {
       int attack = int.parse(stats[1]);
       int defense = int.parse(stats[2]);
 
-      String name = getCharacterName();
+      String name = _getCharacterName();
       character = Character(
         name: name,
         health: health,
@@ -145,7 +127,7 @@ class Game {
     }
   }
 
-  void loadMonsterStats() {
+  void _loadMonsterStats() {
     try {
       final file = File('./lib/monsters.txt');
       final lines = file.readAsLinesSync();
@@ -166,36 +148,19 @@ class Game {
     }
   }
 
-  void gameOver(bool isWin) {
-    print('결과를 저장하시겠습니까? (y/n)');
-    String? answer;
-
-    while (answer == null || answer == 'y' || answer == 'n') {
-      try {
-        answer = stdin.readLineSync();
-      } catch (e) {
-        print("다시 입력해주세요");
-      }
-    }
-
-    if (answer == 'y') {
-      saveResult(isWin);
-    }
-  }
-
-  void askSaveResult(bool result) {
-    String answer = _askLoop(
+  void _askSaveResult(bool result) {
+    String answer = askLoop(
       question: "결과를 저장하시겠습니까? (y/n)",
       error: "다시 입력해주세요",
       answer1: "y",
       answer2: "n",
     );
     if (answer == "y") {
-      saveResult(result);
+      _saveResult(result);
     }
   }
 
-  void saveResult(bool isWin) {
+  void _saveResult(bool isWin) {
     final file = File('result.txt');
 
     try {
