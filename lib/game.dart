@@ -14,11 +14,14 @@ class Game {
     _initData();
     character.showStatus();
 
-    print("새로운 몬스터가 나타났습니다!");
-    Monster monster = getRandomMonster();
-    monster.showStatus();
+    while (killCount < monsterList.length || monsterList.isNotEmpty) {
+      print("새로운 몬스터가 나타났습니다!");
+      Monster monster = getRandomMonster();
+      monster.showStatus();
 
-    battle();
+      battle(monster);
+      killCount++;
+    }
   }
 
   void _initData() {
@@ -26,11 +29,65 @@ class Game {
     loadMonsterStats();
   }
 
-  void battle() {}
+  void battle(Monster monster) {
+    String answer;
+    while (true) {
+      // 유저 턴
+      print('${character.name}의 턴');
+      answer = askLoop(
+        tryAsk: "행동을 선택하세요 (1: 공격, 2:방어): ",
+        catchAsk: "다시 입력해주세요",
+        answer1: '1',
+        answer2: '2',
+      );
+
+      if (answer == "1") {
+        character.attackMonster(monster);
+      } else {
+        character.defend();
+      }
+
+      // 몬스터 턴
+      print('${monster.name}의 턴');
+      monster.attackCharacter(character);
+      answer = askLoop(
+        tryAsk: "다음 몬스터와 싸우시겠습니까? (y/n)",
+        catchAsk: "다시 입력해주세요",
+        answer1: 'y',
+        answer2: 'n',
+      );
+
+      if (monster.health <= 0) {
+        print("${monster.name}을(를) 물리쳤습니다!");
+        break;
+      }
+    }
+  }
+
+  dynamic askLoop({
+    required String tryAsk,
+    required String catchAsk,
+    required dynamic answer1,
+    required dynamic answer2,
+  }) {
+    String? answer;
+
+    while (answer == null || answer != answer1 || answer != answer2) {
+      try {
+        print(tryAsk);
+        answer = stdin.readLineSync();
+      } catch (e) {
+        print(catchAsk);
+      }
+    }
+    return answer;
+  }
 
   Monster getRandomMonster() {
     int rand = Random().nextInt(monsterList.length);
-    return monsterList[rand];
+    Monster monster = monsterList[rand];
+    monsterList.removeAt(rand);
+    return monster;
   }
 
   String getCharacterName() {
@@ -38,15 +95,16 @@ class Game {
     String? name;
     RegExp regex = RegExp(r'^[a-zA-Z가-힣]+$');
 
-    while (name == null || regex.hasMatch(name)) {
-      try {
-        name = stdin.readLineSync();
-      } catch (e) {
-        print("특수문자나 숫자가 포함되어 있습니다.");
+    while (true) {
+      name = stdin.readLineSync();
+
+      if (name != null && regex.hasMatch(name)) {
+        return name;
+      }
+      if (name != null) {
+        print("특수문자나 숫자가 포함되어 있습니다. 이름을 다시 입력해주세요.");
       }
     }
-
-    return name;
   }
 
   void loadCharacterStats() {
@@ -61,7 +119,12 @@ class Game {
       int defense = int.parse(stats[2]);
 
       String name = getCharacterName();
-      character = Character(name: name, health: health, attack: attack, defense: defense);
+      character = Character(
+        name: name,
+        health: health,
+        attack: attack,
+        defense: defense,
+      );
     } catch (e) {
       print('캐릭터 데이터를 불러오는 데 실패했습니다: $e');
       exit(1);
@@ -79,7 +142,9 @@ class Game {
         String name = stats[0];
         int health = int.parse(stats[1]);
         int randAttackMax = int.parse(stats[2]);
-        monsterList.add(Monster(name: name, health: health, randAttackMax: randAttackMax));
+        monsterList.add(
+          Monster(name: name, health: health, randAttackMax: randAttackMax),
+        );
       }
     } catch (e) {
       print('몬스터 데이터를 불러오는 데 실패했습니다: $e');
@@ -108,7 +173,9 @@ class Game {
     final file = File('result.txt');
 
     try {
-      file.writeAsStringSync("${character.name},${character.health}, ${isWin ? "승리" : "패배"}"); // 파일이 없으면 자동 생성
+      file.writeAsStringSync(
+        "${character.name},${character.health}, ${isWin ? "승리" : "패배"}",
+      ); // 파일이 없으면 자동 생성
       print('저장되었습니다.');
     } catch (e) {
       print('파일 저장 중 오류가 발생했습니다: $e');
