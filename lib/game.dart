@@ -105,7 +105,7 @@ class Game {
 
   void _loadCharacterStats() {
     try {
-      final file = File('./lib/characters.txt');
+      final file = File('./lib/data/characters.txt');
       final contents = file.readAsStringSync();
       final stats = contents.split(',');
       if (stats.length != 3) throw FormatException('Invalid character data');
@@ -129,7 +129,7 @@ class Game {
 
   void _loadMonsterStats() {
     try {
-      final file = File('./lib/monsters.txt');
+      final file = File('./lib/data/monsters.txt');
       final lines = file.readAsLinesSync();
       for (var line in lines) {
         final stats = line.split(',');
@@ -161,7 +161,7 @@ class Game {
   }
 
   void _saveResult(bool isWin) {
-    final file = File('result.txt');
+    final file = File('./lib/data/result.txt');
 
     try {
       file.writeAsStringSync(
