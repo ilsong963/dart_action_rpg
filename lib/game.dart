@@ -94,6 +94,7 @@ class Game {
             } else {
               character.useItem(int.parse(itemChoice));
               isItemUsed = true;
+              continue;
             }
         }
         break;
