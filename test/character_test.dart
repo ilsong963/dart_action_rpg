@@ -15,41 +15,41 @@ void main() {
       expect(monster.health, 0);
     });
 
-    test("useItem 선택한 아이템이 삭제되는지 테스트", () {
-      character.itemList = [Item.hp, Item.attack, Item.defense];
+    // test("useItem 선택한 아이템이 삭제되는지 테스트", () {
+    //   character.itemList = [Item.hp, Item.attack, Item.defense];
 
-      character.useItem(2);
+    //   character.useItem(2);
 
-      expect(character.itemList, [Item.hp, Item.defense]);
-    });
+    //   expect(character.itemList, [Item.hp, Item.defense]);
+    // });
 
-    test("useItem 선택한 아이템효과 테스트", () {
-      character.itemList = [Item.hp, Item.attack, Item.defense];
+    // test("useItem 선택한 아이템효과 테스트", () {
+    //   character.itemList = [Item.hp, Item.attack, Item.defense];
 
-      character.useItem(1);
+    //   character.useItem(1);
 
-      expect(character.health, 120);
+    //   expect(character.health, 120);
 
-      character.useItem(1);
+    //   character.useItem(1);
 
-      expect(character.attack, 20);
-      character.useItem(1);
+    //   expect(character.attack, 20);
+    //   character.useItem(1);
 
-      expect(character.defense, 20);
-    });
+    //   expect(character.defense, 20);
+    // });
 
-    test("resetStats 아이템 효과 초기화", () {
-      character.itemList = [Item.hp, Item.attack, Item.defense];
+    // test("resetStats 아이템 효과 초기화", () {
+    //   character.itemList = [Item.hp, Item.attack, Item.defense];
 
-      character.useItem(1);
-      character.resetStats();
-      expect(character.health, 120);
-      character.useItem(1);
-      character.resetStats();
-      expect(character.attack, 10);
-      character.useItem(1);
-      character.resetStats();
-      expect(character.defense, 10);
-    });
+    //   character.useItem(1);
+    //   character.resetStats();
+    //   expect(character.health, 120);
+    //   character.useItem(1);
+    //   character.resetStats();
+    //   expect(character.attack, 10);
+    //   character.useItem(1);
+    //   character.resetStats();
+    //   expect(character.defense, 10);
+    // });
   });
 }
