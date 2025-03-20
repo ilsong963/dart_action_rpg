@@ -55,7 +55,13 @@ class Game {
     while (character.health > 0 && monster.health > 0) {
       // 플레이어 턴
       print("${character.name}의 턴");
-      String action = askLoop(question: "행동을 선택하세요 (1: 공격, 2:방어, 3:아이템): ", error: "다시 입력해주세요", answer1: '1', answer2: '2', answer3: '3');
+      String action = askLoop(
+        question: "행동을 선택하세요 (1: 공격, 2:방어, 3:아이템): ",
+        error: "다시 입력해주세요",
+        answer1: '1',
+        answer2: '2',
+        answer3: '3',
+      );
 
       switch (action) {
         case '1':
