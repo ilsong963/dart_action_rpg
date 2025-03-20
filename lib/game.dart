@@ -95,7 +95,6 @@ class Game {
               character.useItem(int.parse(itemChoice));
               isItemUsed = true;
             }
-            break;
         }
         break;
       }
