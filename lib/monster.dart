@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dart_action_rpg/helper.dart';
 
 import 'character.dart';
@@ -19,7 +21,7 @@ class Monster {
     } else {
       int damage = calculateDamage(attack, character.defense);
 
-      character.health -= damage;
+      character.health = max(0, character.health - damage);
 
       print("$name(이)가 ${character.name}에게 $damage 데미지를 입혔습니다.\n");
     }
