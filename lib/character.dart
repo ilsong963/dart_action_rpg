@@ -56,11 +56,11 @@ class Character {
   }
 
   void useItem(int index) {
-    // 아이템 키를 리스트로 변환하여 인덱스로 접근
+    itemList = Map<Item, int>.from(itemList);
     List<Item> keys = itemList.keys.toList();
 
     Item item = keys[index - 1];
-    itemList[item] = itemList[item]! - 1;
+    itemList[item] = itemList[item]! - 1; //
     if (itemList[item] == 0) {
       itemList.remove(item);
     }
@@ -109,6 +109,7 @@ class Character {
   }
 
   void itemPickUp(Item item) {
+    itemList = Map<Item, int>.from(itemList);
     if (itemList.containsKey(item)) {
       itemList[item] = itemList[item]! + 1;
     } else {
