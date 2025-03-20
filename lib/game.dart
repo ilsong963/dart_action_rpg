@@ -76,6 +76,7 @@ class Game {
               character.useItem();
               isItemUsed = true;
               print("한 턴동안 공격력이 두배로 증가합니다.\n");
+              continue;
             } else {
               print('소지중인 아이템이 없습니다.\n');
               continue;
@@ -84,12 +85,14 @@ class Game {
         break;
       }
 
+      if (isItemUsed && !character.hasItem) {
+        character.resetAttack();
+      }
+
       if (monster.health <= 0) {
         print("${monster.name}을(를) 물리쳤습니다!");
         killCount++;
-        if (isItemUsed && !character.hasItem) {
-          character.resetAttack();
-        }
+
         break;
       }
 
