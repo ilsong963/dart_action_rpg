@@ -51,4 +51,13 @@ class Character {
   void showStatus() {
     print('$name - 체력: $health, 공격력: $attack, 방어력: $defense\n');
   }
+
+  void printItemList() {
+    int maxNameLength = itemList.map((item) => item.name.length).reduce((a, b) => a > b ? a : b);
+
+    print("============== 가방 ==============");
+    for (var i = 0; i < itemList.length; i++) {
+      print("[${i + 1}] ${itemList[i].name.padRight(maxNameLength + 2)} :: ${itemList[i].explanation}");
+    }
+  }
 }
