@@ -13,6 +13,12 @@ class Monster {
 
   Monster({required this.name, required this.health, required this.attack});
 
+  Map<String, dynamic> toJson() => {'name': name, 'health': health, 'attack': attack, 'defense': defense};
+
+  factory Monster.fromJson(Map<String, dynamic> json) {
+    return Monster(name: json['name'], health: json['health'], attack: json['attack']);
+  }
+
   void attackCharacter(Character character) {
     if (character.isDefend) {
       print("${character.name}(이)가 $name의 공격을 막았습니다.\n");
