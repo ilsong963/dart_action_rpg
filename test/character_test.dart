@@ -37,5 +37,19 @@ void main() {
 
       expect(character.defense, 20);
     });
+
+    test("resetStats 아이템 효과 초기화", () {
+      character.itemList = [Item.hp, Item.attack, Item.defense];
+
+      character.useItem(1);
+      character.resetStats();
+      expect(character.health, 100);
+      character.useItem(1);
+      character.resetStats();
+      expect(character.attack, 10);
+      character.useItem(1);
+      character.resetStats();
+      expect(character.defense, 10);
+    });
   });
 }
