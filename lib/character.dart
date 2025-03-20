@@ -6,13 +6,9 @@ class Character {
   int attack;
   int defense;
   bool isDefend = false;
+  bool hasItem = true;
 
-  Character({
-    required this.name,
-    required this.health,
-    required this.attack,
-    required this.defense,
-  });
+  Character({required this.name, required this.health, required this.attack, required this.defense});
 
   void attackMonster(Monster monster) {
     print("$name(이)가 ${monster.name}에게 $attack의 데미지를 입혔습니다.\n");
@@ -21,6 +17,19 @@ class Character {
 
   void defend() {
     isDefend = true;
+  }
+
+  void useItem() {
+    hasItem = false;
+    _increaseAttackByTwo();
+  }
+
+  void _increaseAttackByTwo() {
+    attack *= 2;
+  }
+
+  void resetAttack() {
+    attack = (attack / 2) as int;
   }
 
   void showStatus() {
