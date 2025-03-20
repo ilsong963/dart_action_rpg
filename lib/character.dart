@@ -28,9 +28,9 @@ class Character {
     'defense': defense,
     'isDefend': isDefend,
     'itemList': itemList.map((key, value) => MapEntry(key.name, value)),
-    'baseAttack': baseAttack,
-    'baseDefense': baseDefense,
-    'baseHealth': baseHealth,
+    'baseAttack': attack,
+    'baseDefense': defense,
+    'baseHealth': health,
   };
 
   factory Character.fromJson(Map<String, dynamic> json) {
