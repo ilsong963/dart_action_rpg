@@ -15,6 +15,8 @@ class Game {
     _initData();
     print("게임을 시작합니다!");
 
+    randomEffect();
+
     character.showStatus();
 
     while (true) {
@@ -34,13 +36,7 @@ class Game {
         print("축하합니다! 모든 몬스터를 물리쳤습니다.");
         _askSaveResult(true);
         break;
-      } else if (askLoop(
-            question: "다음 몬스터와 싸우시겠습니까? (y/n)",
-            error: "다시 입력해주세요",
-            answer1: 'y',
-            answer2: 'n',
-          ) ==
-          'n') {
+      } else if (askLoop(question: "다음 몬스터와 싸우시겠습니까? (y/n)", error: "다시 입력해주세요", answer1: 'y', answer2: 'n') == 'n') {
         _askSaveResult(false);
         break;
       }
@@ -58,12 +54,7 @@ class Game {
     while (character.health > 0 && monster.health > 0) {
       // 플레이어 턴
       print("${character.name}의 턴");
-      String action = askLoop(
-        question: "행동을 선택하세요 (1: 공격, 2:방어): ",
-        error: "다시 입력해주세요",
-        answer1: '1',
-        answer2: '2',
-      );
+      String action = askLoop(question: "행동을 선택하세요 (1: 공격, 2:방어): ", error: "다시 입력해주세요", answer1: '1', answer2: '2');
       action == '1' ? character.attackMonster(monster) : character.defend();
 
       if (monster.health <= 0) {
@@ -117,12 +108,7 @@ class Game {
       int defense = int.parse(stats[2]);
 
       String name = _getCharacterName();
-      character = Character(
-        name: name,
-        health: health,
-        attack: attack,
-        defense: defense,
-      );
+      character = Character(name: name, health: health, attack: attack, defense: defense);
     } catch (e) {
       print('캐릭터 데이터를 불러오는 데 실패했습니다: $e');
       exit(1);
@@ -140,9 +126,7 @@ class Game {
         String name = stats[0];
         int health = int.parse(stats[1]);
         int randAttackMax = int.parse(stats[2]);
-        monsterList.add(
-          Monster(name: name, health: health, randAttackMax: randAttackMax),
-        );
+        monsterList.add(Monster(name: name, health: health, randAttackMax: randAttackMax));
       }
     } catch (e) {
       print('몬스터 데이터를 불러오는 데 실패했습니다: $e');
@@ -151,12 +135,7 @@ class Game {
   }
 
   void _askSaveResult(bool result) {
-    String answer = askLoop(
-      question: "결과를 저장하시겠습니까? (y/n)",
-      error: "다시 입력해주세요",
-      answer1: "y",
-      answer2: "n",
-    );
+    String answer = askLoop(question: "결과를 저장하시겠습니까? (y/n)", error: "다시 입력해주세요", answer1: "y", answer2: "n");
     if (answer == "y") {
       _saveResult(result);
     }
@@ -166,12 +145,17 @@ class Game {
     final file = File('./lib/data/result.txt');
 
     try {
-      file.writeAsStringSync(
-        "${character.name},${character.health}, ${isWin ? "승리" : "패배"}",
-      ); // 파일이 없으면 자동 생성
+      file.writeAsStringSync("${character.name},${character.health}, ${isWin ? "승리" : "패배"}"); // 파일이 없으면 자동 생성
       print('저장되었습니다.');
     } catch (e) {
       print('파일 저장 중 오류가 발생했습니다: $e');
+    }
+  }
+
+  void randomEffect() {
+    if (Random().nextDouble() < 0.3) {
+      character.health += 10;
+      print("보너스 체력을 얻었습니다! 현재 체력: ${character.health}");
     }
   }
 }
