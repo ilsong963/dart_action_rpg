@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:dart_action_rpg/helper.dart';
+import 'package:dart_action_rpg/item.dart';
 
 import 'character.dart';
 import 'monster.dart';
@@ -36,7 +37,7 @@ class Game {
         print("축하합니다! 모든 몬스터를 물리쳤습니다.");
         _askSaveResult(true);
         break;
-      } else if (askLoop(question: "다음 몬스터와 싸우시겠습니까? (y/n)", error: "다시 입력해주세요", answer1: 'y', answer2: 'n') == 'n') {
+      } else if (askLoop(question: "다음 몬스터와 싸우시겠습니까? (y/n)", error: "다시 입력해주세요", validAnswers: ['y', 'n']) == 'n') {
         _askSaveResult(false);
         break;
       }
@@ -59,13 +60,7 @@ class Game {
       print("${character.name}의 턴");
 
       while (true) {
-        String action = askLoop(
-          question: "행동을 선택하세요 (1: 공격, 2:방어, 3:아이템): ",
-          error: "다시 입력해주세요",
-          answer1: '1',
-          answer2: '2',
-          answer3: '3',
-        );
+        String action = askLoop(question: "행동을 선택하세요 (1: 공격, 2: 방어, 3: 가방): ", error: "다시 입력해주세요", validAnswers: ['1', '2', '3']);
 
         switch (action) {
           case '1':
@@ -149,7 +144,7 @@ class Game {
       int defense = int.parse(stats[2]);
 
       String name = _getCharacterName();
-      character = Character(name: name, health: health, attack: attack, defense: defense);
+      character = Character(name: name, baseHealth: health, baseAttack: attack, baseDefense: defense);
     } catch (e) {
       print('캐릭터 데이터를 불러오는 데 실패했습니다: $e');
       exit(1);
@@ -176,7 +171,7 @@ class Game {
   }
 
   void _askSaveResult(bool result) {
-    String answer = askLoop(question: "결과를 저장하시겠습니까? (y/n)", error: "다시 입력해주세요", answer1: "y", answer2: "n");
+    String answer = askLoop(question: "결과를 저장하시겠습니까? (y/n)", error: "다시 입력해주세요", validAnswers: ['y', 'n']);
     if (answer == "y") {
       _saveResult(result);
     }
