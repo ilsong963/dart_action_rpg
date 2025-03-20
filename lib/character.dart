@@ -16,8 +16,8 @@ class Character {
       health = baseHealth;
 
   void attackMonster(Monster monster) {
-    print("$name(이)가 ${monster.name}에게 $attack의 데미지를 입혔습니다.\n");
-    monster.health -= attack;
+    monster.health -= (attack - monster.defense);
+    print("$name(이)가 ${monster.name}에게 ${attack - monster.defense}의 데미지를 입혔습니다.\n");
   }
 
   void defend() {
