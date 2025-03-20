@@ -47,11 +47,13 @@ class Character {
   void resetStats() {
     attack = baseAttack;
     defense = baseDefense;
-    print("아이템 효과 종료.");
+    print("SYSTEM >> 아이템 효과 종료.");
   }
 
   void showStatus() {
-    print('$name - 체력: $health, 공격력: $attack, 방어력: $defense\n');
+    print("\n==============현재 상태==============");
+    print('$name - 체력: $health, 공격력: $attack, 방어력: $defense');
+    print("======================================\n");
   }
 
   void printItemList() {

@@ -10,42 +10,52 @@ class Game {
   int killCount = 0;
 
   void startGame() {
+    // 초기화
     _initData();
-    print("게임을 시작합니다!");
 
+    // 시작 텍스트 출력
+    printStart();
+
+    // 랜덤 효과 적용
     randomEffect();
 
-    character.showStatus();
-
     while (true) {
-      print("새로운 몬스터가 나타났습니다!");
+      character.showStatus();
+      print("SYSTEM >> 새로운 몬스터가 나타났습니다!");
       Monster monster = _getRandomMonster();
       monster.showStatus();
 
       _battle(monster);
 
       if (character.health <= 0) {
-        print("게임 오버! 패배했습니다.");
+        print("SYSTEM >> 게임 오버! 패배했습니다.");
         _askSaveResult(false);
         break;
       }
 
       if (monsterList.isEmpty) {
-        print("축하합니다! 모든 몬스터를 물리쳤습니다.");
+        print("SYSTEM >> 축하합니다! 모든 몬스터를 물리쳤습니다.");
         _askSaveResult(true);
         break;
-      } else if (askLoop(question: "다음 몬스터와 싸우시겠습니까? (y/n)", error: "다시 입력해주세요", validAnswers: ['y', 'n']) == 'n') {
+      } else if (askLoop(question: "SYSTEM >> 다음 몬스터와 싸우시겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']) ==
+          'n') {
         _askSaveResult(false);
         break;
       }
     }
 
-    print("게임을 종료합니다.");
+    print("SYSTEM >> 게임을 종료합니다.");
   }
 
   void _initData() {
     _loadCharacterStats();
     _loadMonsterStats();
+  }
+
+  void printStart() {
+    print("\n======================================");
+    print("★ ☆ ★ ☆ 게임을 시작합니다 ★ ☆ ★ ☆");
+    print("======================================\n");
   }
 
   void _battle(Monster monster) {
@@ -54,10 +64,14 @@ class Game {
     while (character.health > 0 && monster.health > 0) {
       turn += 1;
       // 플레이어 턴
-      print("${character.name}의 턴");
+      print("SYSTEM >> ${character.name}의 턴");
 
       while (true) {
-        String action = askLoop(question: "행동을 선택하세요 (1: 공격, 2: 방어, 3: 가방): ", error: "다시 입력해주세요", validAnswers: ['1', '2', '3']);
+        String action = askLoop(
+          question: "SYSTEM >> 행동을 선택하세요 (1: 공격, 2: 방어, 3: 가방): ",
+          error: "SYSTEM >> 다시 입력해주세요",
+          validAnswers: ['1', '2', '3'],
+        );
 
         switch (action) {
           case '1':
@@ -70,8 +84,8 @@ class Game {
             character.printItemList();
             print('[0] 닫기');
             String itemChoice = askLoop(
-              question: "행동을 선택하세요",
-              error: "다시 입력해주세요",
+              question: "SYSTEM >> 행동을 선택하세요",
+              error: "SYSTEM >> 다시 입력해주세요",
               validAnswers: List.generate(character.itemList.length + 1, (index) => (index).toString()),
             );
             if (itemChoice == '0') {
@@ -87,19 +101,19 @@ class Game {
       }
 
       if (monster.health <= 0) {
-        print("${monster.name}을(를) 물리쳤습니다!");
+        print("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!");
         killCount++;
 
         break;
       }
 
       // 몬스터 턴
-      print("${monster.name}의 턴");
+      print("SYSTEM >> ${monster.name}의 턴");
       monster.attackCharacter(character);
 
       if (turn % 3 == 0) {
         monster.increaseDefense();
-        print('${monster.name}의 방어력이 증가했습니다! 현재 방어력: ${monster.defense}');
+        print('SYSTEM >> ${monster.name}의 방어력이 증가했습니다! 현재 방어력: ${monster.defense}');
       }
 
       if (isItemUsed) {
@@ -121,7 +135,7 @@ class Game {
   }
 
   String _getCharacterName() {
-    print("캐릭터의 이름을 입력하세요:");
+    print("SYSTEM >> 캐릭터의 이름을 입력하세요:");
     String? name;
     RegExp regex = RegExp(r'^[a-zA-Z가-힣]+$');
 
@@ -132,7 +146,7 @@ class Game {
         return name;
       }
       if (name != null) {
-        print("특수문자나 숫자가 포함되어 있습니다. 이름을 다시 입력해주세요.");
+        print("SYSTEM >> 특수문자나 숫자가 포함되어 있습니다. 이름을 다시 입력해주세요.");
       }
     }
   }
@@ -176,7 +190,7 @@ class Game {
   }
 
   void _askSaveResult(bool result) {
-    String answer = askLoop(question: "결과를 저장하시겠습니까? (y/n)", error: "다시 입력해주세요", validAnswers: ['y', 'n']);
+    String answer = askLoop(question: "SYSTEM >> 결과를 저장하시겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']);
     if (answer == "y") {
       _saveResult(result);
     }
@@ -187,7 +201,7 @@ class Game {
 
     try {
       file.writeAsStringSync("${character.name},${character.health}, ${isWin ? "승리" : "패배"}"); // 파일이 없으면 자동 생성
-      print('저장되었습니다.');
+      print('SYSTEM >> 저장되었습니다.');
     } catch (e) {
       print('파일 저장 중 오류가 발생했습니다: $e');
     }
@@ -196,7 +210,7 @@ class Game {
   void randomEffect() {
     if (Random().nextDouble() < 0.3) {
       character.health += 10;
-      print("보너스 체력을 얻었습니다! 현재 체력: ${character.health}");
+      print("SYSTEM >> 보너스 체력을 얻었습니다! 현재 체력: ${character.health}");
     }
   }
 }
