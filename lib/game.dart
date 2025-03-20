@@ -8,7 +8,6 @@ import 'dart:io';
 class Game {
   late Character character;
   List<Monster> monsterList = [];
-  int killCount = 0;
 
   void startGame() {
     // 초기화
@@ -102,7 +101,6 @@ class Game {
 
       if (monster.health <= 0) {
         print("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!\n");
-        killCount++;
         randomDrop();
         break;
       }
