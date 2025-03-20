@@ -216,7 +216,7 @@ class Game {
   void randomDrop() {
     if (Random().nextDouble() < 0.5) {
       Item randomAction = Item.values[Random().nextInt(Item.values.length)];
-      character.itemList.add(randomAction);
+      character.itemPickUp(randomAction);
       print("SYSTEM >> 아이템을 얻었습니다! : ${randomAction.name}\n");
     }
   }

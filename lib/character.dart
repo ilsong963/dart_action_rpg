@@ -8,7 +8,7 @@ class Character {
   int attack;
   int defense;
   bool isDefend = false;
-  List<Item> itemList = [Item.hp, Item.attack, Item.defense];
+  Map<Item, int> itemList = {Item.hp: 1, Item.attack: 1, Item.defense: 1};
   int baseAttack, baseDefense, baseHealth;
 
   Character({required this.name, required this.baseHealth, required this.baseAttack, required this.baseDefense})
@@ -27,7 +27,14 @@ class Character {
   }
 
   void useItem(int index) {
-    Item item = itemList.removeAt(index - 1);
+    // 아이템 키를 리스트로 변환하여 인덱스로 접근
+    List<Item> keys = itemList.keys.toList();
+
+    Item item = keys[index - 1];
+    itemList[item] = itemList[item]! - 1;
+    if (itemList[item] == 0) {
+      itemList.remove(item);
+    }
 
     switch (item) {
       case Item.hp:
@@ -59,11 +66,24 @@ class Character {
   }
 
   void printItemList() {
-    int maxNameLength = itemList.fold<int>(0, (max, item) => max > item.name.length ? max : item.name.length);
-
     print("============== 가방 ==============");
-    for (var i = 0; i < itemList.length; i++) {
-      print("[${i + 1}] ${itemList[i].name.padRight(maxNameLength + 2)} :: ${itemList[i].shortExplanation}");
+    if (itemList.isEmpty) {
+      return;
+    }
+
+    int maxNameLength = itemList.keys.fold<int>(0, (max, item) => max > item.name.length ? max : item.name.length);
+    int index = 1;
+
+    itemList.forEach((item, count) {
+      print("[${index++}] ${item.name.padRight(maxNameLength + 2)} x $count   ::${item.shortExplanation}");
+    });
+  }
+
+  void itemPickUp(Item item) {
+    if (itemList.containsKey(item)) {
+      itemList[item] = itemList[item]! + 1;
+    } else {
+      itemList[item] = 1;
     }
   }
 }
