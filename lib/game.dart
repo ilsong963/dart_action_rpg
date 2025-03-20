@@ -37,8 +37,8 @@ class Game {
         print("SYSTEM >> 축하합니다! 모든 몬스터를 물리쳤습니다.");
         _askSaveResult(true);
         break;
-      } else if (askLoop(question: "SYSTEM >> 다음 몬스터와 싸우시겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']) ==
-          'n') {
+      }
+      if (askLoop(question: "SYSTEM >> 다음 몬스터와 싸우시겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']) == 'n') {
         _askSaveResult(false);
         break;
       }
@@ -89,12 +89,11 @@ class Game {
               validAnswers: List.generate(character.itemList.length + 1, (index) => (index).toString()),
             );
             if (itemChoice == '0') {
-              continue;
+              break;
             } else {
               character.useItem(int.parse(itemChoice));
               isItemUsed = true;
             }
-
             break;
         }
         break;
@@ -103,7 +102,6 @@ class Game {
       if (monster.health <= 0) {
         print("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!");
         killCount++;
-
         break;
       }
 
@@ -118,9 +116,8 @@ class Game {
 
       if (isItemUsed) {
         character.resetStats();
+        isItemUsed = false;
       }
-
-      isItemUsed = false;
 
       character.showStatus();
       monster.showStatus();
