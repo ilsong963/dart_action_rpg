@@ -75,9 +75,9 @@ class Game {
             if (character.hasItem) {
               character.useItem();
               isItemUsed = true;
-              print("한 턴동안 공격력이 두배로 증가합니다.");
+              print("한 턴동안 공격력이 두배로 증가합니다.\n");
             } else {
-              print('소지중인 아이템이 없습니다.');
+              print('소지중인 아이템이 없습니다.\n');
               continue;
             }
         }
