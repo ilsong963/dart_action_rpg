@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:dart_action_rpg/helper.dart';
+import 'package:dart_action_rpg/item.dart';
 import 'character.dart';
 import 'monster.dart';
 import 'dart:io';
@@ -100,8 +101,9 @@ class Game {
       }
 
       if (monster.health <= 0) {
-        print("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!");
+        print("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!\n");
         killCount++;
+        randomDrop();
         break;
       }
 
@@ -208,6 +210,14 @@ class Game {
     if (Random().nextDouble() < 0.3) {
       character.health += 10;
       print("SYSTEM >> 보너스 체력을 얻었습니다! 현재 체력: ${character.health}");
+    }
+  }
+
+  void randomDrop() {
+    if (Random().nextDouble() < 0.5) {
+      Item randomAction = Item.values[Random().nextInt(Item.values.length)];
+      character.itemList.add(randomAction);
+      print("SYSTEM >> 아이템을 얻었습니다! : ${randomAction.name}\n");
     }
   }
 }
