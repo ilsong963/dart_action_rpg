@@ -29,7 +29,7 @@ class Character {
   }
 
   void resetAttack() {
-    attack = (attack / 2) as int;
+    attack = (attack / 2).toInt();
   }
 
   void showStatus() {
