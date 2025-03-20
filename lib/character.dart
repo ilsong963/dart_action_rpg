@@ -7,7 +7,6 @@ class Character {
   int attack;
   int defense;
   bool isDefend = false;
-  bool hasItem = true;
   List<Item> itemList = [Item.hp, Item.attack, Item.defense];
   int baseAttack, baseDefense, baseHealth;
 
@@ -30,21 +29,24 @@ class Character {
 
     switch (item) {
       case Item.hp:
-        health *= 2;
+        health += item.value;
+        print("체력을 ${item.value} 회복했습니다");
         break;
       case Item.attack:
-        attack *= 2;
+        attack += item.value;
+        print("공격력이 ${item.value} 증가 했습니다");
         break;
       case Item.defense:
-        defense *= 2;
+        defense += item.value;
+        print("방어력이 ${item.value} 증가 했습니다");
         break;
     }
+    showStatus();
   }
 
   void resetStats() {
     attack = baseAttack;
     defense = baseDefense;
-    health = baseHealth;
     print("아이템 효과 종료.");
   }
 
@@ -53,11 +55,11 @@ class Character {
   }
 
   void printItemList() {
-    int maxNameLength = itemList.map((item) => item.name.length).reduce((a, b) => a > b ? a : b);
+    int maxNameLength = itemList.fold<int>(0, (max, item) => max > item.name.length ? max : item.name.length);
 
     print("============== 가방 ==============");
     for (var i = 0; i < itemList.length; i++) {
-      print("[${i + 1}] ${itemList[i].name.padRight(maxNameLength + 2)} :: ${itemList[i].explanation}");
+      print("[${i + 1}] ${itemList[i].name.padRight(maxNameLength + 2)} :: ${itemList[i].shortExplanation}");
     }
   }
 }

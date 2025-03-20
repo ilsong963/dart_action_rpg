@@ -1,8 +1,5 @@
 import 'dart:math';
-
 import 'package:dart_action_rpg/helper.dart';
-import 'package:dart_action_rpg/item.dart';
-
 import 'character.dart';
 import 'monster.dart';
 import 'dart:io';
@@ -70,21 +67,23 @@ class Game {
             character.defend();
             break;
           case '3':
-            if (character.hasItem) {
-              character.useItem();
-              isItemUsed = true;
-              print("한 턴동안 공격력이 두배로 증가합니다.\n");
+            character.printItemList();
+            print('[0] 닫기');
+            String itemChoice = askLoop(
+              question: "행동을 선택하세요",
+              error: "다시 입력해주세요",
+              validAnswers: List.generate(character.itemList.length + 1, (index) => (index).toString()),
+            );
+            if (itemChoice == '0') {
               continue;
             } else {
-              print('소지중인 아이템이 없습니다.\n');
-              continue;
+              character.useItem(int.parse(itemChoice));
+              isItemUsed = true;
             }
+
+            break;
         }
         break;
-      }
-
-      if (isItemUsed && !character.hasItem) {
-        character.resetAttack();
       }
 
       if (monster.health <= 0) {
@@ -102,6 +101,12 @@ class Game {
         monster.increaseDefense();
         print('${monster.name}의 방어력이 증가했습니다! 현재 방어력: ${monster.defense}');
       }
+
+      if (isItemUsed) {
+        character.resetStats();
+      }
+
+      isItemUsed = false;
 
       character.showStatus();
       monster.showStatus();
