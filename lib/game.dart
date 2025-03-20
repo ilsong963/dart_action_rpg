@@ -99,9 +99,16 @@ class Game {
         break;
       }
 
+      if (isItemUsed) {
+        character.resetStats();
+        isItemUsed = false;
+      }
+
       if (monster.health <= 0) {
         print("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!\n");
-        randomDrop();
+        if (monsterList.length != 1) {
+          randomDrop();
+        }
         break;
       }
 
@@ -112,11 +119,6 @@ class Game {
       if (turn % 3 == 0) {
         monster.increaseDefense();
         print('SYSTEM >> ${monster.name}의 방어력이 증가했습니다! 현재 방어력: ${monster.defense}');
-      }
-
-      if (isItemUsed) {
-        character.resetStats();
-        isItemUsed = false;
       }
 
       character.showStatus();
