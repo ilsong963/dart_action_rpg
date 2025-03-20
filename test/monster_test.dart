@@ -9,7 +9,7 @@ void main() {
     setUp(() => monster = Monster(name: "spider", health: 10, randAttackMax: 10));
 
     test("attackCharacter 테스트", () {
-      Character character = Character(name: 'test', health: 50, attack: 10, defense: 10);
+      Character character = Character(name: "test", baseHealth: 50, baseAttack: 10, baseDefense: 10);
 
       monster.attackCharacter(character);
       expect(character.health > 40, isTrue);
