@@ -8,13 +8,42 @@ class Character {
   int attack;
   int defense;
   bool isDefend = false;
-  Map<Item, int> itemList = {Item.hp: 1, Item.attack: 1, Item.defense: 1};
+  Map<Item, int> itemList;
   int baseAttack, baseDefense, baseHealth;
 
-  Character({required this.name, required this.baseHealth, required this.baseAttack, required this.baseDefense})
-    : attack = baseAttack,
-      defense = baseDefense,
-      health = baseHealth;
+  Character({
+    required this.name,
+    required this.baseHealth,
+    required this.baseAttack,
+    required this.baseDefense,
+    this.itemList = const {Item.hp: 1, Item.attack: 1, Item.defense: 1},
+  }) : attack = baseAttack,
+       defense = baseDefense,
+       health = baseHealth;
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'health': health,
+    'attack': attack,
+    'defense': defense,
+    'isDefend': isDefend,
+    'itemList': itemList.map((key, value) => MapEntry(key.name, value)),
+    'baseAttack': baseAttack,
+    'baseDefense': baseDefense,
+    'baseHealth': baseHealth,
+  };
+
+  factory Character.fromJson(Map<String, dynamic> json) {
+    return Character(
+      name: json['name'],
+      itemList: (json['itemList'] as Map<String, dynamic>).map(
+        (key, value) => MapEntry(Item.values.firstWhere((e) => e.name == key), value),
+      ),
+      baseAttack: json['baseAttack'],
+      baseDefense: json['baseDefense'],
+      baseHealth: json['baseHealth'],
+    );
+  }
 
   void attackMonster(Monster monster) {
     int damage = calculateDamage(attack, monster.defense);
