@@ -54,30 +54,34 @@ class Game {
     bool isItemUsed = false;
     while (character.health > 0 && monster.health > 0) {
       // 플레이어 턴
-      print("${character.name}의 턴");
-      String action = askLoop(
-        question: "행동을 선택하세요 (1: 공격, 2:방어, 3:아이템): ",
-        error: "다시 입력해주세요",
-        answer1: '1',
-        answer2: '2',
-        answer3: '3',
-      );
+      while (true) {
+        print("${character.name}의 턴");
+        String action = askLoop(
+          question: "행동을 선택하세요 (1: 공격, 2:방어, 3:아이템): ",
+          error: "다시 입력해주세요",
+          answer1: '1',
+          answer2: '2',
+          answer3: '3',
+        );
 
-      switch (action) {
-        case '1':
-          character.attackMonster(monster);
-          break;
-        case '2':
-          character.defend();
-          break;
-        case '3':
-          if (character.hasItem) {
-            character.useItem();
-            isItemUsed = true;
-            print("한 턴동안 공격력이 두배로 증가합니다.");
-          } else {
-            print('소지중인 아이템이 없습니다.');
-          }
+        switch (action) {
+          case '1':
+            character.attackMonster(monster);
+            break;
+          case '2':
+            character.defend();
+            break;
+          case '3':
+            if (character.hasItem) {
+              character.useItem();
+              isItemUsed = true;
+              print("한 턴동안 공격력이 두배로 증가합니다.");
+            } else {
+              print('소지중인 아이템이 없습니다.');
+              continue;
+            }
+        }
+        break;
       }
 
       if (monster.health <= 0) {
