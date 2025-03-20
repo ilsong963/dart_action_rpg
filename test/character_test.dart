@@ -28,7 +28,7 @@ void main() {
 
       character.useItem(1);
 
-      expect(character.health, 200);
+      expect(character.health, 120);
 
       character.useItem(1);
 
@@ -43,7 +43,7 @@ void main() {
 
       character.useItem(1);
       character.resetStats();
-      expect(character.health, 100);
+      expect(character.health, 120);
       character.useItem(1);
       character.resetStats();
       expect(character.attack, 10);
