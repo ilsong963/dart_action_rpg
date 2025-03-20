@@ -9,11 +9,7 @@ class Monster {
   int randAttackMax;
   int defense = 0;
 
-  Monster({
-    required this.name,
-    required this.health,
-    required this.randAttackMax,
-  });
+  Monster({required this.name, required this.health, required this.randAttackMax});
 
   void attackCharacter(Character character) {
     int randDamage = Random().nextInt(randAttackMax + 1);
@@ -37,5 +33,9 @@ class Monster {
 
   void showStatus() {
     print("$name - 체력 : $health , 공격력 : $randAttackMax\n");
+  }
+
+  void increaseDefense() {
+    defense += 2;
   }
 }

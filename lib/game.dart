@@ -52,10 +52,13 @@ class Game {
 
   void _battle(Monster monster) {
     bool isItemUsed = false;
+    int turn = 0;
     while (character.health > 0 && monster.health > 0) {
+      turn += 1;
       // 플레이어 턴
+      print("${character.name}의 턴");
+
       while (true) {
-        print("${character.name}의 턴");
         String action = askLoop(
           question: "행동을 선택하세요 (1: 공격, 2:방어, 3:아이템): ",
           error: "다시 입력해주세요",
@@ -99,6 +102,11 @@ class Game {
       // 몬스터 턴
       print("${monster.name}의 턴");
       monster.attackCharacter(character);
+
+      if (turn % 3 == 0) {
+        monster.increaseDefense();
+        print('${monster.name}의 방어력이 증가했습니다! 현재 방어력: ${monster.defense}');
+      }
 
       character.showStatus();
       monster.showStatus();
