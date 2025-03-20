@@ -181,7 +181,7 @@ class Game {
         String name = stats[0];
         int health = int.parse(stats[1]);
         int randAttackMax = int.parse(stats[2]);
-        monsterList.add(Monster(name: name, health: health, randAttackMax: randAttackMax));
+        monsterList.add(Monster(name: name, health: health, attack: randAttackMax));
       }
     } catch (e) {
       print('몬스터 데이터를 불러오는 데 실패했습니다: $e');

@@ -1,3 +1,4 @@
+import 'package:dart_action_rpg/helper.dart';
 import 'package:dart_action_rpg/item.dart';
 import 'package:dart_action_rpg/monster.dart';
 
@@ -16,8 +17,9 @@ class Character {
       health = baseHealth;
 
   void attackMonster(Monster monster) {
-    monster.health -= (attack - monster.defense);
-    print("$name(이)가 ${monster.name}에게 ${attack - monster.defense}의 데미지를 입혔습니다.\n");
+    int damage = calculateDamage(attack, monster.defense);
+    monster.health -= damage;
+    print("$name(이)가 ${monster.name}에게 $damage의 데미지를 입혔습니다.\n");
   }
 
   void defend() {

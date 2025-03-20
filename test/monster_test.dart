@@ -6,7 +6,7 @@ void main() {
   group("Monster 테스트", () {
     late Monster monster;
 
-    setUp(() => monster = Monster(name: "spider", health: 10, randAttackMax: 10));
+    setUp(() => monster = Monster(name: "spider", health: 10, attack: 10));
 
     test("attackCharacter 테스트", () {
       Character character = Character(name: "test", baseHealth: 50, baseAttack: 10, baseDefense: 10);
