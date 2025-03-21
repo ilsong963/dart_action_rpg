@@ -1,20 +1,19 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:io';
 import 'package:dart_action_rpg/helper.dart';
 import 'package:dart_action_rpg/item.dart';
 import 'character.dart';
 import 'monster.dart';
-import 'dart:io';
 
 class Game {
   late Character character;
   List<Monster> monsterList = [];
 
-  // // Todo
-  // 유저 체크하고
-  // 클리어된건지 확인하고
-  // 맞으면 불러오기.
-  // 그리고 다음에 게임처음 시작할때도 똑같이 체크해서 불러오기.
+  Future<void> delayedPrint(String message, {int milliseconds = 1000}) async {
+    await Future.delayed(Duration(milliseconds: milliseconds));
+    print(message);
+  }
 
   bool canLoadData(String name) {
     try {
@@ -25,26 +24,21 @@ class Game {
     }
   }
 
-  void startGame() {
-    // 초기화
-    _initData();
-
-    // 시작 텍스트 출력
-    printStart();
-
-    // 랜덤 효과 적용
-    randomEffect();
+  Future<void> startGame() async {
+    await _initData();
+    await printStart();
+    await randomEffect();
 
     while (true) {
       character.showStatus();
-      print("SYSTEM >> 새로운 몬스터가 나타났습니다!");
+      await delayedPrint("SYSTEM >> 새로운 몬스터가 나타났습니다!");
       Monster monster = _getRandomMonster();
       monster.showStatus();
 
-      _battle(monster);
+      await _battle(monster);
 
       if (character.health <= 0) {
-        print("SYSTEM >> 게임 오버! 패배했습니다.");
+        await delayedPrint("SYSTEM >> 게임 오버! 패배했습니다.");
         if (canLoadData(character.name)) {
           if (askLoadPreviousData()) {
             continue;
@@ -55,20 +49,19 @@ class Game {
       }
 
       if (monsterList.isEmpty) {
-        print("SYSTEM >> 축하합니다! 모든 몬스터를 물리쳤습니다.");
-        _askSaveResult(true);
+        await delayedPrint("SYSTEM >> 축하합니다! 모든 몬스터를 물리쳤습니다.");
+        await _askSaveResult(true);
         break;
       }
 
-      _askSaveResult(false);
+      await _askSaveResult(false);
     }
 
-    print("SYSTEM >> 게임을 종료합니다.");
+    await delayedPrint("SYSTEM >> 게임을 종료합니다.");
   }
 
-  void _initData() {
+  Future<void> _initData() async {
     String name = _getCharacterName();
-    print(name);
     if (canLoadData(name) && askLoadPreviousData()) {
       return;
     } else {
@@ -77,19 +70,18 @@ class Game {
     }
   }
 
-  void printStart() {
-    print("\n======================================");
-    print("★ ☆ ★ ☆ 게임을 시작합니다 ★ ☆ ★ ☆");
-    print("======================================\n");
+  Future<void> printStart() async {
+    await delayedPrint("\n======================================");
+    await delayedPrint("★ ☆ ★ ☆ 게임을 시작합니다 ★ ☆ ★ ☆");
+    await delayedPrint("======================================\n");
   }
 
-  void _battle(Monster monster) {
+  Future<void> _battle(Monster monster) async {
     bool isItemUsed = false;
     int turn = 0;
     while (character.health > 0 && monster.health > 0) {
       turn += 1;
-      // 플레이어 턴
-      print("SYSTEM >> ${character.name}의 턴");
+      await delayedPrint("SYSTEM >> ${character.name}의 턴");
 
       while (true) {
         String action = askLoop(
@@ -128,20 +120,19 @@ class Game {
       }
 
       if (monster.health <= 0) {
-        print("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!\n");
+        await delayedPrint("SYSTEM >> ${monster.name}을(를) 물리쳤습니다!\n");
         if (monsterList.length != 1) {
-          randomDrop();
+          await randomDrop();
         }
         break;
       }
 
-      // 몬스터 턴
-      print("SYSTEM >> ${monster.name}의 턴");
+      await delayedPrint("SYSTEM >> ${monster.name}의 턴");
       monster.attackCharacter(character);
 
       if (turn % 3 == 0) {
         monster.increaseDefense();
-        print('SYSTEM >> ${monster.name}의 방어력이 증가했습니다! 현재 방어력: ${monster.defense}');
+        await delayedPrint('SYSTEM >> ${monster.name}의 방어력이 증가했습니다! 현재 방어력: ${monster.defense}');
       }
 
       character.showStatus();
@@ -175,16 +166,12 @@ class Game {
 
   Map<String, dynamic> loadTxt(String path) {
     String jsonString = File(path).readAsStringSync();
-
-    Map<String, dynamic> jsonData = jsonDecode(jsonString);
-    return jsonData;
+    return jsonDecode(jsonString);
   }
 
   void loadPreviousData() {
     Map<String, dynamic> jsonData = loadTxt('./lib/data/result.txt');
-
     character = Character.fromJson(jsonData['character']);
-
     monsterList = (jsonData['monsters'] as List).map((monsterJson) => Monster.fromJson(monsterJson)).toList();
   }
 
@@ -233,16 +220,15 @@ class Game {
     }
   }
 
-  void _askSaveResult(bool isClear) {
+  Future<void> _askSaveResult(bool isClear) async {
     String answer = askLoop(question: "SYSTEM >> 결과를 저장하시겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']);
     if (answer == "y") {
-      _saveResult(isClear);
+      await _saveResult(isClear);
     }
   }
 
-  void _saveResult(bool isClear) {
+  Future<void> _saveResult(bool isClear) async {
     final file = File('./lib/data/result.txt');
-
     try {
       String jsonString = jsonEncode({
         "character": character.toJson(),
@@ -250,25 +236,24 @@ class Game {
         "isClear": isClear,
       });
       file.writeAsStringSync(jsonString);
-
-      print('SYSTEM >> 저장되었습니다.');
+      await delayedPrint('SYSTEM >> 저장되었습니다.');
     } catch (e) {
       print('파일 저장 중 오류가 발생했습니다: $e');
     }
   }
 
-  void randomEffect() {
+  Future<void> randomEffect() async {
     if (Random().nextDouble() < 0.3) {
       character.health += 10;
-      print("SYSTEM >> 보너스 체력을 얻었습니다! 현재 체력: ${character.health}");
+      await delayedPrint("SYSTEM >> 보너스 체력을 얻었습니다! 현재 체력: ${character.health}");
     }
   }
 
-  void randomDrop() {
+  Future<void> randomDrop() async {
     if (Random().nextDouble() < 0.5) {
       Item randomAction = Item.values[Random().nextInt(Item.values.length)];
       character.itemPickUp(randomAction);
-      print("SYSTEM >> 아이템을 얻었습니다! : ${randomAction.name}\n");
+      await delayedPrint("SYSTEM >> 아이템을 얻었습니다! : ${randomAction.name}\n");
     }
   }
 }
