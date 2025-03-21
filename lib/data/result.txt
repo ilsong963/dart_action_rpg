@@ -1,1 +1,1 @@
-asdf,0, 패배
+{"character":{"name":"zzzz","health":12,"attack":10,"defense":5,"isDefend":false,"itemList":{"HP_UP":1,"ATTACK_UP":1,"DEFENSE_UP":1},"baseAttack":10,"baseDefense":5,"baseHealth":12},"monsters":[{"name":"Spiderman","health":20,"attack":30,"defense":0}],"isClear":false}

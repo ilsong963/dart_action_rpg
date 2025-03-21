@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:dart_action_rpg/helper.dart';
 import 'package:dart_action_rpg/item.dart';
@@ -8,6 +9,21 @@ import 'dart:io';
 class Game {
   late Character character;
   List<Monster> monsterList = [];
+
+  // // Todo
+  // 유저 체크하고
+  // 클리어된건지 확인하고
+  // 맞으면 불러오기.
+  // 그리고 다음에 게임처음 시작할때도 똑같이 체크해서 불러오기.
+
+  bool canLoadData(String name) {
+    try {
+      Map<String, dynamic> map = loadTxt('./lib/data/result.txt');
+      return map['character']['name'] == name && !(map['isClear'] as bool);
+    } catch (e) {
+      return false;
+    }
+  }
 
   void startGame() {
     // 초기화
@@ -29,8 +45,13 @@ class Game {
 
       if (character.health <= 0) {
         print("SYSTEM >> 게임 오버! 패배했습니다.");
-        _askSaveResult(false);
-        break;
+        if (canLoadData(character.name)) {
+          if (askLoadPreviousData()) {
+            continue;
+          } else {
+            break;
+          }
+        }
       }
 
       if (monsterList.isEmpty) {
@@ -38,18 +59,22 @@ class Game {
         _askSaveResult(true);
         break;
       }
-      if (askLoop(question: "SYSTEM >> 다음 몬스터와 싸우시겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']) == 'n') {
-        _askSaveResult(false);
-        break;
-      }
+
+      _askSaveResult(false);
     }
 
     print("SYSTEM >> 게임을 종료합니다.");
   }
 
   void _initData() {
-    _loadCharacterStats();
-    _loadMonsterStats();
+    String name = _getCharacterName();
+    print(name);
+    if (canLoadData(name) && askLoadPreviousData()) {
+      return;
+    } else {
+      _loadCharacterStats(name);
+      _loadMonsterStats();
+    }
   }
 
   void printStart() {
@@ -150,7 +175,32 @@ class Game {
     }
   }
 
-  void _loadCharacterStats() {
+  Map<String, dynamic> loadTxt(String path) {
+    String jsonString = File(path).readAsStringSync();
+
+    Map<String, dynamic> jsonData = jsonDecode(jsonString);
+    return jsonData;
+  }
+
+  void loadPreviousData() {
+    Map<String, dynamic> jsonData = loadTxt('./lib/data/result.txt');
+
+    character = Character.fromJson(jsonData['character']);
+
+    monsterList = (jsonData['monsters'] as List).map((monsterJson) => Monster.fromJson(monsterJson)).toList();
+  }
+
+  bool askLoadPreviousData() {
+    String answer = askLoop(question: "SYSTEM >> 이전 데이터를 불러오겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']);
+    if (answer == "y") {
+      loadPreviousData();
+      print("SYSTEM >> 이전 데이터를 불러옵니다");
+      return true;
+    }
+    return false;
+  }
+
+  void _loadCharacterStats(String name) {
     try {
       final file = File('./lib/data/characters.txt');
       final contents = file.readAsStringSync();
@@ -161,11 +211,9 @@ class Game {
       int attack = int.parse(stats[1]);
       int defense = int.parse(stats[2]);
 
-      String name = _getCharacterName();
       character = Character(name: name, baseHealth: health, baseAttack: attack, baseDefense: defense);
     } catch (e) {
       print('캐릭터 데이터를 불러오는 데 실패했습니다: $e');
-      exit(1);
     }
   }
 
@@ -184,22 +232,27 @@ class Game {
       }
     } catch (e) {
       print('몬스터 데이터를 불러오는 데 실패했습니다: $e');
-      exit(1);
     }
   }
 
-  void _askSaveResult(bool result) {
+  void _askSaveResult(bool isClear) {
     String answer = askLoop(question: "SYSTEM >> 결과를 저장하시겠습니까? (y/n)", error: "SYSTEM >> 다시 입력해주세요", validAnswers: ['y', 'n']);
     if (answer == "y") {
-      _saveResult(result);
+      _saveResult(isClear);
     }
   }
 
-  void _saveResult(bool isWin) {
+  void _saveResult(bool isClear) {
     final file = File('./lib/data/result.txt');
 
     try {
-      file.writeAsStringSync("${character.name},${character.health}, ${isWin ? "승리" : "패배"}"); // 파일이 없으면 자동 생성
+      String jsonString = jsonEncode({
+        "character": character.toJson(),
+        "monsters": monsterList.map((monster) => monster.toJson()).toList(),
+        "isClear": isClear,
+      });
+      file.writeAsStringSync(jsonString);
+
       print('SYSTEM >> 저장되었습니다.');
     } catch (e) {
       print('파일 저장 중 오류가 발생했습니다: $e');
