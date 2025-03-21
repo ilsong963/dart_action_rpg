@@ -113,13 +113,11 @@ class Game {
               error: "SYSTEM >> 다시 입력해주세요",
               validAnswers: List.generate(character.itemList.length + 1, (index) => (index).toString()),
             );
-            if (itemChoice == '0') {
-              break;
-            } else {
+            if (itemChoice != '0') {
               character.useItem(int.parse(itemChoice));
               isItemUsed = true;
-              continue;
             }
+            continue;
         }
         break;
       }
