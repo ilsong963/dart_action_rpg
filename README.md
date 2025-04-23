@@ -31,9 +31,9 @@
    - [Dart 공식 홈페이지](https://dart.dev/get-dart)에서 설치할 수 있습니다.
 
 2. **프로젝트 실행**
-   ```sh
+```
 { "uid": "user123", "email": "user@example.com", "username": "홍길동", "profileImageUrl": null, // 또는 Storage URL "createdAt": "2025-04-22T00:00:00Z", "lastLogin": "2025-04-22T10:00:00Z" }
-   ```
+```
 
 ## 게임 진행 방법
 1. 게임을 시작하면 캐릭터의 이름을 입력합니다.
