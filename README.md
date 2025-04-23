@@ -32,7 +32,7 @@
 
 2. **프로젝트 실행**
    ```sh
-   dart run lib/main.dart
+{ "uid": "user123", "email": "user@example.com", "username": "홍길동", "profileImageUrl": null, // 또는 Storage URL "createdAt": "2025-04-22T00:00:00Z", "lastLogin": "2025-04-22T10:00:00Z" }
    ```
 
 ## 게임 진행 방법
